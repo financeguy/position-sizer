@@ -23,6 +23,23 @@
       <form class="form" autocomplete="off" novalidate>
 
         <div class="field-group">
+          <label class="field__label" for="ticker">TICKER</label>
+          <div class="field__input-wrap">
+            <input
+              class="field__input field__input--ticker"
+              id="ticker"
+              type="text"
+              inputmode="text"
+              placeholder="NVDA"
+              maxlength="5"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <span class="field__error" id="tickerError"></span>
+        </div>
+
+        <div class="field-group">
           <label class="field__label" for="accountSize">ACCOUNT SIZE</label>
           <div class="field__input-wrap">
             <span class="field__prefix">$</span>
@@ -124,19 +141,6 @@
           </div>
         </div>
 
-        <!-- R:R Targets -->
-        <div class="rr-block">
-          <span class="rr-block__title">R:R TARGETS</span>
-          <div class="rr-block__row">
-            <span class="rr-block__label">2R</span>
-            <span class="rr-block__value" id="target2R">—</span>
-          </div>
-          <div class="rr-block__row">
-            <span class="rr-block__label">3R</span>
-            <span class="rr-block__value" id="target3R">—</span>
-          </div>
-        </div>
-
         <!-- R-Multiples Panel -->
         <div class="rm-panel" id="rmPanel">
           <span class="rm-panel__title">R-MULTIPLES</span>
@@ -187,11 +191,10 @@
         <thead>
           <tr>
             <th>TIME</th>
+            <th>TICKER</th>
             <th>DIR</th>
             <th>ENTRY</th>
-            <th>STOP</th>
             <th>SHARES</th>
-            <th>EXPOSURE</th>
             <th>RISK</th>
             <th></th>
           </tr>

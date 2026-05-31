@@ -181,6 +181,15 @@ input[type="number"] {
   color: var(--grey-border);
 }
 
+/* Ticker field — larger, mono, uppercase feel */
+.field__input--ticker {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .field__error {
   font-family: var(--font-ui);
   font-size: 11px;
@@ -268,49 +277,6 @@ input[type="number"] {
   font-weight: 300;
   line-height: 1.1;
   color: var(--grey-text);
-}
-
-/* ============================================================
-   R:R BLOCK
-   ============================================================ */
-.rr-block {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-top: 20px;
-  border-top: 1px solid var(--grey-border);
-}
-
-.rr-block__title {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  color: var(--grey-mute);
-  text-transform: uppercase;
-}
-
-.rr-block__row {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-}
-
-.rr-block__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--grey-mute);
-  width: 24px;
-}
-
-.rr-block__value {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 300;
-  color: var(--grey-text);
-  letter-spacing: -0.01em;
 }
 
 /* ============================================================
@@ -426,6 +392,12 @@ input[type="number"] {
   border-color: var(--red-bright);
 }
 
+.btn.is-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .action-feedback {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -466,6 +438,12 @@ input[type="number"] {
 
 .history-table tbody tr:hover td {
   color: var(--white);
+}
+
+.history-table .td-ticker {
+  color: var(--white);
+  font-weight: 500;
+  letter-spacing: 0.06em;
 }
 
 .history-table .td-dir {

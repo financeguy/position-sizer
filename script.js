@@ -4,6 +4,7 @@
 // DOM REFS — INPUTS
 // ============================================================
 const inputs = {
+  ticker:      document.getElementById("ticker"),
   accountSize: document.getElementById("accountSize"),
   riskPct:     document.getElementById("riskPct"),
   entryPrice:  document.getElementById("entryPrice"),
@@ -11,7 +12,7 @@ const inputs = {
 };
 
 // ============================================================
-// DOM REFS — OUTPUTS (existing)
+// DOM REFS — OUTPUTS
 // ============================================================
 const outputs = {
   positionSize:     document.getElementById("positionSize"),
@@ -19,13 +20,11 @@ const outputs = {
   totalExposure:    document.getElementById("totalExposure"),
   maxRisk:          document.getElementById("maxRisk"),
   perShareRisk:     document.getElementById("perShareRisk"),
-  target2R:         document.getElementById("target2R"),
-  target3R:         document.getElementById("target3R"),
   directionBadge:   document.getElementById("directionBadge"),
 };
 
 // ============================================================
-// DOM REFS — NEW FEATURES
+// DOM REFS — R-MULTIPLES PANEL
 // ============================================================
 const rmRows = {
   "1R": document.getElementById("rm1R"),
@@ -34,16 +33,20 @@ const rmRows = {
   "5R": document.getElementById("rm5R"),
 };
 
-const btnSave       = document.getElementById("btnSave");
-const btnCopy       = document.getElementById("btnCopy");
+// ============================================================
+// DOM REFS — ACTIONS + HISTORY
+// ============================================================
+const btnSave        = document.getElementById("btnSave");
+const btnCopy        = document.getElementById("btnCopy");
 const actionFeedback = document.getElementById("actionFeedback");
-const historyWrap   = document.getElementById("historyWrap");
-const historyBody   = document.getElementById("historyBody");
+const historyWrap    = document.getElementById("historyWrap");
+const historyBody    = document.getElementById("historyBody");
 
 // ============================================================
-// ERRORS
+// DOM REFS — ERRORS
 // ============================================================
 const errors = {
+  tickerError:        document.getElementById("tickerError"),
   accountSizeError:   document.getElementById("accountSizeError"),
   accountSizeWarning: document.getElementById("accountSizeWarning"),
   riskPctError:       document.getElementById("riskPctError"),
@@ -81,6 +84,17 @@ function formatPrice(n) {
 }
 
 // ============================================================
+// BUTTON STATE — disable Save/Copy when ticker is empty
+// ============================================================
+function updateButtonState() {
+  const tickerFilled = inputs.ticker.value.trim().length > 0;
+  btnSave.disabled = !tickerFilled;
+  btnCopy.disabled = !tickerFilled;
+  btnSave.classList.toggle("is-disabled", !tickerFilled);
+  btnCopy.classList.toggle("is-disabled", !tickerFilled);
+}
+
+// ============================================================
 // CLEAR / RESET
 // ============================================================
 function clearOutputs() {
@@ -89,8 +103,6 @@ function clearOutputs() {
   outputs.totalExposure.textContent    = "—";
   outputs.maxRisk.textContent          = "—";
   outputs.perShareRisk.textContent     = "—";
-  outputs.target2R.textContent         = "—";
-  outputs.target3R.textContent         = "—";
   outputs.directionBadge.textContent   = "";
   clearRmPanel();
   lastCalc = null;
@@ -117,6 +129,17 @@ function setError(fieldId, message) {
 }
 
 // ============================================================
+// TICKER: auto-uppercase on input
+// ============================================================
+inputs.ticker.addEventListener("input", () => {
+  const pos = inputs.ticker.selectionStart;
+  inputs.ticker.value = inputs.ticker.value.toUpperCase();
+  inputs.ticker.setSelectionRange(pos, pos);
+  updateButtonState();
+  calculate();
+});
+
+// ============================================================
 // R-MULTIPLES PANEL
 // ============================================================
 function clearRmPanel() {
@@ -137,7 +160,9 @@ function renderRmPanel(entry, perShareRisk, positionSize, direction) {
     const target = direction === "LONG"
       ? entry + m * perShareRisk
       : entry - m * perShareRisk;
-    const pnl    = m * perShareRisk * positionSize;
+
+    // P&L = position_size × N × R
+    const pnl = positionSize * m * perShareRisk;
 
     row.querySelector(".rm-panel__target").textContent = formatPrice(target);
 
@@ -198,7 +223,7 @@ function calculate() {
     errors.accountSizeWarning.textContent = "";
   }
 
-  // Direction detection — unchanged
+  // Direction detection
   let direction;
   if (stop < entry) {
     direction = "LONG";
@@ -214,28 +239,18 @@ function calculate() {
 
   outputs.directionBadge.textContent = direction;
 
-  // Core math — unchanged
+  // Core math
   const maxRisk       = account * (riskPct / 100);
   const perShareRisk  = Math.abs(entry - stop);
   const positionSize  = Math.floor(maxRisk / perShareRisk);
   const totalExposure = positionSize * entry;
 
-  const target2R = direction === "LONG"
-    ? entry + 2 * perShareRisk
-    : entry - 2 * perShareRisk;
-
-  const target3R = direction === "LONG"
-    ? entry + 3 * perShareRisk
-    : entry - 3 * perShareRisk;
-
-  // Render existing outputs — unchanged
+  // Render
   outputs.maxRisk.textContent      = formatDollar(maxRisk);
   outputs.perShareRisk.textContent = formatDollarCents(perShareRisk);
   outputs.totalExposure.textContent = positionSize > 0
     ? formatDollar(totalExposure)
     : "—";
-  outputs.target2R.textContent = formatPrice(target2R);
-  outputs.target3R.textContent = formatPrice(target3R);
 
   if (positionSize === 0) {
     outputs.positionSize.textContent     = "—";
@@ -245,15 +260,15 @@ function calculate() {
     outputs.positionSizeNote.textContent = "";
   }
 
-  // R-multiples panel
   if (positionSize > 0) {
     renderRmPanel(entry, perShareRisk, positionSize, direction);
   } else {
     clearRmPanel();
   }
 
-  // Store last valid calc for Save + Copy
+  // Store for Save + Copy
   lastCalc = {
+    ticker: inputs.ticker.value.trim().toUpperCase(),
     account, riskPct, entry, stop,
     direction, maxRisk, perShareRisk,
     positionSize, totalExposure,
@@ -262,8 +277,7 @@ function calculate() {
 
 // ============================================================
 // COPY SUMMARY
-// Format: TICKER Direction @ entry . stop X . N sh . $exposure . risk $X (1R) . 2R = X
-// (Ticker field not in scope — omit label, use direction as first token)
+// Format: TICKER Direction @ entry · stop X · N sh · $exposure · risk $X (1R) · 2R = X
 // ============================================================
 function buildSummary(c) {
   const target2R = c.direction === "LONG"
@@ -271,6 +285,7 @@ function buildSummary(c) {
     : c.entry - 2 * c.perShareRisk;
 
   return [
+    c.ticker,
     c.direction,
     "@ " + formatPrice(c.entry),
     "stop " + formatPrice(c.stop),
@@ -286,8 +301,7 @@ btnCopy.addEventListener("click", () => {
     showFeedback("Nothing to copy");
     return;
   }
-  const summary = buildSummary(lastCalc);
-  navigator.clipboard.writeText(summary).then(() => {
+  navigator.clipboard.writeText(buildSummary(lastCalc)).then(() => {
     showFeedback("Copied");
   }).catch(() => {
     showFeedback("Copy failed");
@@ -296,8 +310,9 @@ btnCopy.addEventListener("click", () => {
 
 // ============================================================
 // SAVE TRADE + HISTORY (localStorage key: "ps_trades")
+// Saved fields: ticker, direction, entry, stop, positionSize, maxRisk, ts
 // ============================================================
-const LS_KEY = "ps_trades";
+const LS_KEY    = "ps_trades";
 const MAX_TRADES = 5;
 
 function loadTrades() {
@@ -332,17 +347,15 @@ function renderHistory() {
 
   // Most recent first
   [...trades].reverse().forEach((t, i) => {
+    const reloadIndex = trades.length - 1 - i;
     const tr = document.createElement("tr");
-
-    const reloadIndex = trades.length - 1 - i; // index in original array
 
     tr.innerHTML = `
       <td>${formatTime(t.ts)}</td>
+      <td class="td-ticker">${t.ticker}</td>
       <td class="td-dir">${t.direction}</td>
       <td>${formatPrice(t.entry)}</td>
-      <td>${formatPrice(t.stop)}</td>
       <td>${t.positionSize.toLocaleString("en-US")}</td>
-      <td>${formatDollar(t.totalExposure)}</td>
       <td>${formatDollar(t.maxRisk)}</td>
       <td><span class="td-reload" data-index="${reloadIndex}">Reload</span></td>
     `;
@@ -361,18 +374,17 @@ btnSave.addEventListener("click", () => {
 
   trades.push({
     ts:           Date.now(),
-    account:      lastCalc.account,
-    riskPct:      lastCalc.riskPct,
+    ticker:       lastCalc.ticker,
+    direction:    lastCalc.direction,
     entry:        lastCalc.entry,
     stop:         lastCalc.stop,
-    direction:    lastCalc.direction,
-    maxRisk:      lastCalc.maxRisk,
-    perShareRisk: lastCalc.perShareRisk,
     positionSize: lastCalc.positionSize,
-    totalExposure: lastCalc.totalExposure,
+    maxRisk:      lastCalc.maxRisk,
+    // keep these for Reload
+    account:      lastCalc.account,
+    riskPct:      lastCalc.riskPct,
   });
 
-  // Keep only last 5
   if (trades.length > MAX_TRADES) {
     trades.splice(0, trades.length - MAX_TRADES);
   }
@@ -382,7 +394,7 @@ btnSave.addEventListener("click", () => {
   showFeedback("Saved");
 });
 
-// Reload a saved trade back into inputs
+// Reload a saved trade into inputs
 historyBody.addEventListener("click", (e) => {
   const el = e.target.closest(".td-reload");
   if (!el) return;
@@ -392,11 +404,13 @@ historyBody.addEventListener("click", (e) => {
   const t      = trades[index];
   if (!t) return;
 
+  inputs.ticker.value      = t.ticker;
   inputs.accountSize.value = t.account;
   inputs.riskPct.value     = t.riskPct;
   inputs.entryPrice.value  = t.entry;
   inputs.stopPrice.value   = t.stop;
 
+  updateButtonState();
   calculate();
   showFeedback("Loaded");
 });
@@ -415,13 +429,20 @@ function showFeedback(msg) {
 }
 
 // ============================================================
-// EVENT LISTENERS — live update on every keystroke
+// DISABLED BUTTON STYLE — add to CSS via JS toggle
 // ============================================================
-Object.values(inputs).forEach(input => {
+// (handled via .is-disabled class in CSS)
+
+// ============================================================
+// EVENT LISTENERS — live update on every keystroke
+// (ticker has its own listener above that also calls calculate)
+// ============================================================
+[inputs.accountSize, inputs.riskPct, inputs.entryPrice, inputs.stopPrice].forEach(input => {
   input.addEventListener("input", calculate);
 });
 
 // ============================================================
 // INIT
 // ============================================================
+updateButtonState();
 renderHistory();
