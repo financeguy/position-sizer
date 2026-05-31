@@ -314,6 +314,179 @@ input[type="number"] {
 }
 
 /* ============================================================
+   R-MULTIPLES PANEL
+   ============================================================ */
+.rm-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--grey-border);
+}
+
+.rm-panel__title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--grey-mute);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.rm-panel__header-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 1fr;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--grey-mute);
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--grey-border);
+}
+
+.rm-panel__row {
+  display: grid;
+  grid-template-columns: 36px 1fr 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.rm-panel__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--grey-mute);
+}
+
+.rm-panel__target {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--grey-text);
+  letter-spacing: -0.01em;
+}
+
+.rm-panel__pnl {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--grey-mute);
+  letter-spacing: -0.01em;
+}
+
+.rm-panel__pnl.is-profit {
+  color: #4caf82;
+}
+
+/* ============================================================
+   BOTTOM BAR: ACTIONS + HISTORY
+   ============================================================ */
+.bottom-bar {
+  border-top: 1px solid var(--grey-border);
+  padding: 28px 44px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: var(--black);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--grey-text);
+  border: 1px solid var(--grey-border);
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover {
+  color: var(--white);
+  border-color: var(--grey-mute);
+}
+
+.btn--save:hover {
+  color: var(--red-bright);
+  border-color: var(--red-bright);
+}
+
+.action-feedback {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--grey-mute);
+  transition: opacity 0.3s ease;
+}
+
+/* History table */
+.history-wrap {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.history-table th {
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--grey-mute);
+  padding: 0 12px 8px 0;
+  border-bottom: 1px solid var(--grey-border);
+  white-space: nowrap;
+}
+
+.history-table td {
+  padding: 9px 12px 9px 0;
+  color: var(--grey-text);
+  border-bottom: 1px solid #161616;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.history-table tbody tr:hover td {
+  color: var(--white);
+}
+
+.history-table .td-dir {
+  color: var(--red-bright);
+  font-weight: 500;
+}
+
+.history-table .td-reload {
+  color: var(--grey-mute);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  transition: color 0.15s ease;
+}
+
+.history-table .td-reload:hover {
+  color: var(--white);
+}
+
+/* ============================================================
    RESPONSIVE: STACK BELOW 720px
    ============================================================ */
 @media (max-width: 720px) {

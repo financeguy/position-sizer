@@ -137,9 +137,68 @@
           </div>
         </div>
 
+        <!-- R-Multiples Panel -->
+        <div class="rm-panel" id="rmPanel">
+          <span class="rm-panel__title">R-MULTIPLES</span>
+          <div class="rm-panel__header-row">
+            <span>MULTIPLE</span>
+            <span>TARGET</span>
+            <span>P&amp;L</span>
+          </div>
+          <div class="rm-panel__row" id="rm1R">
+            <span class="rm-panel__label">1R</span>
+            <span class="rm-panel__target">—</span>
+            <span class="rm-panel__pnl">—</span>
+          </div>
+          <div class="rm-panel__row" id="rm2R">
+            <span class="rm-panel__label">2R</span>
+            <span class="rm-panel__target">—</span>
+            <span class="rm-panel__pnl">—</span>
+          </div>
+          <div class="rm-panel__row" id="rm3R">
+            <span class="rm-panel__label">3R</span>
+            <span class="rm-panel__target">—</span>
+            <span class="rm-panel__pnl">—</span>
+          </div>
+          <div class="rm-panel__row" id="rm5R">
+            <span class="rm-panel__label">5R</span>
+            <span class="rm-panel__target">—</span>
+            <span class="rm-panel__pnl">—</span>
+          </div>
+        </div>
+
       </div>
 
     </section>
+
+  </div>
+
+  <!-- BOTTOM: Actions + Trade History -->
+  <div class="bottom-bar">
+
+    <div class="actions">
+      <button class="btn btn--save" id="btnSave">Save Trade</button>
+      <button class="btn btn--copy" id="btnCopy">Copy Summary</button>
+      <span class="action-feedback" id="actionFeedback"></span>
+    </div>
+
+    <div class="history-wrap" id="historyWrap">
+      <table class="history-table" id="historyTable">
+        <thead>
+          <tr>
+            <th>TIME</th>
+            <th>DIR</th>
+            <th>ENTRY</th>
+            <th>STOP</th>
+            <th>SHARES</th>
+            <th>EXPOSURE</th>
+            <th>RISK</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
 
   </div>
 
