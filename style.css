@@ -1,0 +1,340 @@
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+  --black:       #000000;
+  --white:       #ffffff;
+  --red:         #e63946;
+  --red-bright:  #ff6b6b;
+  --grey-dark:   #111111;
+  --grey-mid:    #1e1e1e;
+  --grey-border: #2a2a2a;
+  --grey-mute:   #555555;
+  --grey-text:   #888888;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui:      'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Remove number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ============================================================
+   LAYOUT: SPLIT SCREEN
+   ============================================================ */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.panel {
+  flex: 1;
+  padding: 48px 44px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel--inputs {
+  background: var(--black);
+  border-right: 1px solid var(--grey-border);
+}
+
+.panel--results {
+  background: var(--grey-dark);
+  justify-content: center;
+}
+
+/* ============================================================
+   PANEL HEADER
+   ============================================================ */
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.panel__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--grey-mute);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   DIRECTION BADGE
+   ============================================================ */
+.direction-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  min-width: 48px;
+  text-align: right;
+}
+
+/* ============================================================
+   FORM & FIELDS
+   ============================================================ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--grey-text);
+  text-transform: uppercase;
+}
+
+.field__input-wrap {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--grey-border);
+  transition: border-color 0.15s ease;
+}
+
+.field__input-wrap:focus-within {
+  border-color: var(--white);
+}
+
+.field__input-wrap.is-error {
+  border-color: var(--red);
+}
+
+.field__prefix,
+.field__suffix {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--grey-mute);
+  user-select: none;
+  padding: 10px 0;
+}
+
+.field__prefix {
+  padding-right: 6px;
+}
+
+.field__suffix {
+  padding-left: 6px;
+}
+
+.field__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: var(--font-ui);
+  font-size: 22px;
+  font-weight: 400;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.field__input::placeholder {
+  color: var(--grey-border);
+}
+
+.field__error {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--red);
+  min-height: 16px;
+  letter-spacing: 0.01em;
+}
+
+.field__warning {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 400;
+  color: #b8860b;
+  min-height: 16px;
+}
+
+/* ============================================================
+   RESULTS PANEL
+   ============================================================ */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* Shared result anatomy */
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.result__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--grey-mute);
+  text-transform: uppercase;
+}
+
+.result__subtext {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--red-bright);
+  min-height: 18px;
+  letter-spacing: 0.02em;
+}
+
+/* Primary: Position Size — biggest number on the page */
+.result__value--primary {
+  font-family: var(--font-display);
+  font-size: clamp(72px, 10vw, 108px);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+
+/* Secondary: Total Exposure */
+.result__value--secondary {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+
+/* Tertiary row: Max Risk + Per Share */
+.results__row {
+  display: flex;
+  gap: 40px;
+}
+
+.result--tertiary {
+  flex: 1;
+}
+
+.result__value--tertiary {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--grey-text);
+}
+
+/* ============================================================
+   R:R BLOCK
+   ============================================================ */
+.rr-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid var(--grey-border);
+}
+
+.rr-block__title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--grey-mute);
+  text-transform: uppercase;
+}
+
+.rr-block__row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.rr-block__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--grey-mute);
+  width: 24px;
+}
+
+.rr-block__value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--grey-text);
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   RESPONSIVE: STACK BELOW 720px
+   ============================================================ */
+@media (max-width: 720px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .panel {
+    padding: 32px 24px;
+  }
+
+  .panel--inputs {
+    border-right: none;
+    border-bottom: 1px solid var(--grey-border);
+  }
+
+  .result__value--primary {
+    font-size: clamp(56px, 18vw, 88px);
+  }
+
+  .result__value--secondary {
+    font-size: clamp(30px, 10vw, 44px);
+  }
+}
